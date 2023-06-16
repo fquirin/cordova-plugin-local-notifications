@@ -90,12 +90,12 @@
 
     <!-- android -->
     <platform name="android">
-        <preference name="ANDROID_SUPPORT_V4_VERSION" default="26.+" />
+        <preference name="ANDROID_SUPPORT_V4_VERSION" default="28.+" />
         <framework src="com.android.support:support-v4:$ANDROID_SUPPORT_V4_VERSION" />
         <framework src="src/android/build/localnotification.gradle" custom="true" type="gradleReference"/>
-         <!-- android x -->
-        <preference name="ANDROIDX_VERSION" default="1.2.0" />
-        <preference name="ANDROIDX_APPCOMPAT_VERSION" default="1.3.1" />
+        <!-- android x -->
+        <preference name="ANDROIDX_VERSION" default="1.0.0" />
+        <preference name="ANDROIDX_APPCOMPAT_VERSION" default="1.6.1" />
 
         <framework src="androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT_VERSION" />
 
