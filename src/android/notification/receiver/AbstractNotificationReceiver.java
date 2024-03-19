@@ -53,6 +53,11 @@ abstract public class AbstractNotificationReceiver extends BroadcastReceiver {
 
         if (autoLaunch) {
             LaunchUtils.launchApp(context);
+        } else {
+            //launch App in Background to execute js/cordova code on events if app is not running
+            if(!checkAppRunning()) {
+                LaunchUtils.launchAppInBackground(context);
+            }
         }
 
         // Show notification if we should (triggerInApp is false)
@@ -75,9 +80,9 @@ abstract public class AbstractNotificationReceiver extends BroadcastReceiver {
             if (!options.shallWakeUp()) {
                 wakeUp(notification);
             }
-
-            dispatchAppEvent("trigger", notification);
         }
+
+        dispatchAppEvent("trigger", notification);
 
         if (!options.isInfiniteTrigger())
             return;

@@ -26,6 +26,7 @@ package de.appplant.cordova.plugin.localnotification;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
@@ -38,12 +39,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
 import android.app.NotificationManager;
 import android.app.NotificationChannel;
 import android.app.PendingIntent;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import android.content.Intent;
 
@@ -72,6 +76,7 @@ import static android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
 import static android.content.Context.POWER_SERVICE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
+import static android.os.Build.VERSION_CODES.S;
 import static de.appplant.cordova.plugin.notification.Notification.Type.SCHEDULED;
 import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERED;
 
@@ -99,6 +104,8 @@ public class LocalNotification extends CordovaPlugin {
     private static int REQUEST_PERMISSIONS_CALL = 10;
 
     private static int REQUEST_IGNORE_BATTERY_CALL = 20;
+
+    private static int REQUEST_ALARM_PERMISSIONS_CALL = 30;
 
     private CallbackContext callbackContext;
 
@@ -285,6 +292,18 @@ public class LocalNotification extends CordovaPlugin {
     }
 
     /**
+     * Determine if Alarm and Reminder permissions have been granted
+     *
+     * @return true if we are granted
+     */
+    private boolean canSetExactAlarm() {
+        Context context = cordova.getActivity().getApplicationContext();
+        AlarmManager amgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        return SDK_INT < S || amgr.canScheduleExactAlarms();
+    }
+
+    /**
      * Determine if do not battery optimization permissions have been granted
      *
      * @return true if we are succcessfully ignoring battery permissions.
@@ -372,6 +391,12 @@ public class LocalNotification extends CordovaPlugin {
             isIgnoringBatteryOptimizations(this.callbackContext);
 
             this.callbackContext = null;
+        } else if (requestCode == REQUEST_ALARM_PERMISSIONS_CALL && this.callbackContext != null){
+            if(canSetExactAlarm()){
+                check(this.callbackContext);
+            } else {
+                success(this.callbackContext, false);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -407,7 +432,19 @@ public class LocalNotification extends CordovaPlugin {
      */
     private void check(CallbackContext command) {
         boolean allowed = getNotMgr().hasPermission();
-        success(command, allowed);
+        if(!canSetExactAlarm() && allowed){
+            JSONObject res = new JSONObject();
+            try {
+                res.put("reminder", false);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+            PluginResult result = new PluginResult(PluginResult.Status.OK, res);
+            command.sendPluginResult(result);
+        } else {
+            success(command, allowed);
+        }
     }
 
     /**
