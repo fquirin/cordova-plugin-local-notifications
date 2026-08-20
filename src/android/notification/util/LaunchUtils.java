@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -90,8 +91,11 @@ public final class LaunchUtils {
                         | FLAG_ACTIVITY_NEW_DOCUMENT
         );
 
-        ActivityOptions startoptions = ActivityOptions.makeTaskLaunchBehind();
-
-        context.startActivity(intent,startoptions.toBundle());
+		try {
+			ActivityOptions startoptions = ActivityOptions.makeTaskLaunchBehind();
+			context.startActivity(intent,startoptions.toBundle());
+		} catch (Exception e) {
+			Log.w("CordovaLocalNotification", "Background-Start failed", e);
+		}
     }
 }
