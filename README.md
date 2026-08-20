@@ -9,7 +9,7 @@ On Device Reboot all Alarms are deleted and the Restore Broadcast Receiver trys 
 But many Manufacturers(Xiaomi, Samsung, ...) have "security" features implemented where they restrict apps from Autostart and so the BroadcastReceiver never got execute, till the user activates this autostart setting. (But they have also whitelisted very known apps like facebook, whatsapp, ...)
 
 #### To install
-Run `cordova plugin add https://github.com/mariosteinbacher/cordova-plugin-local-notifications.git --save --noregistery`
+Run `cordova plugin add https://github.com/mariosteinbacher/cordova-plugin-local-notifications.git --save --no-registry`
 
 ***
 
@@ -27,7 +27,7 @@ To avoid launching the app in this case, add the following in your config.xml fi
 `<preference name="AndroidLaunchMode" value="singleInstance"/>`
 
 #### To install
-Run `cordova plugin add https://github.com/fquirin/cordova-plugin-local-notifications.git --save --noregistery`
+Run `cordova plugin add https://github.com/fquirin/cordova-plugin-local-notifications.git --save --no-registry`
 
 ***
 
