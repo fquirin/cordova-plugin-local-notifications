@@ -178,6 +178,7 @@ public final class Notification {
         List<Pair<Date, Intent>> intents = new ArrayList<Pair<Date, Intent>>();
         Set<String> ids                  = new ArraySet<String>();
         AlarmManager mgr                 = getAlarmMgr();
+        String channelId                 = null;
 
         cancelScheduledAlarms();
 
@@ -188,7 +189,7 @@ public final class Notification {
 
             if (date == null)
                 continue;
-
+            
             Intent intent = new Intent(context, receiver)
                     .setAction(PREF_KEY_ID + request.getIdentifier())
                     .putExtra(Notification.EXTRA_ID, options.getId())
@@ -221,6 +222,9 @@ public final class Notification {
             int notificationId = options.getId();
             PendingIntent pi =
               LaunchUtils.getBroadcastPendingIntent(context, intent, notificationId);
+            
+            //check or create Notification Channel (AssetUtil.parse)
+            channelId = options.getChannel();
 
             try {
                 switch (options.getPrio()) {

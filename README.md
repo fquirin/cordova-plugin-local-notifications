@@ -1,3 +1,18 @@
+### Notes about this fork from
+https://github.com/fquirin/cordova-plugin-local-notifications.git
+
+ - fixed the problem where the Android Notifiction Channel does not get created on first schedule
+ - fixed the problem where events like trigger and clear never got executed (in cordova js) when the app is not running in the backround
+
+## Be aware
+On Device Reboot all Alarms are deleted and the Restore Broadcast Receiver trys to reschedule them.
+But many Manufacturers(Xiaomi, Samsung, ...) have "security" features implemented where they restrict apps from Autostart and so the BroadcastReceiver never got execute, till the user activates this autostart setting. (But they have also whitelisted very known apps like facebook, whatsapp, ...)
+
+#### To install
+Run `cordova plugin add https://github.com/mariosteinbacher/cordova-plugin-local-notifications.git --save --no-registry`
+
+***
+
 ### Notes about this fork
 
 - This is a merge of [@timkellypa](https://github.com/timkellypa/cordova-plugin-local-notifications), [@bhandaribhumin](https://github.com/bhandaribhumin/cordova-plugin-local-notification-12), [@powowbox](https://github.com/powowbox/cordova-plugin-local-notification-12) and my own fixes.
@@ -12,7 +27,7 @@ To avoid launching the app in this case, add the following in your config.xml fi
 `<preference name="AndroidLaunchMode" value="singleInstance"/>`
 
 #### To install
-Run `cordova plugin add https://github.com/fquirin/cordova-plugin-local-notifications.git --save --noregistery`
+Run `cordova plugin add https://github.com/fquirin/cordova-plugin-local-notifications.git --save --no-registry`
 
 ***
 
